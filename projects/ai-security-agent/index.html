@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; data:; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;">
+  <meta name="referrer" content="no-referrer">
+  <title>AI Security Agent — Alen Frashnishta</title>
+  <meta name="description" content="Catch confidential data before it is pasted into an AI chatbot.">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <nav class="wrap nav" aria-label="Primary">
+      <a class="brand" href="../../index.html">AF</a>
+      <ul>
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../projects/index.html">Projects</a></li>
+        <li><a href="../../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main">
+    <article class="wrap project">
+      <p class="crumbs"><a href="../../projects/index.html">Projects</a> / AI Security Agent</p>
+      <header class="pagehead">
+        <h1>AI Security Agent</h1>
+        <p class="lead">Catch confidential data before it is pasted into an AI chatbot.</p>
+        <p class="status">In development · 2026</p>
+        <p class="tags"><span>Python</span><span>mitmproxy</span><span>FastAPI</span><span>SQLAlchemy</span><span>pytest</span></p>
+        <p class="cta"><a class="btn primary" href="https://github.com/alennjit/AI-Security-Agent" rel="noopener noreferrer">Source on GitHub</a></p>
+      </header>
+      <section>
+        <h2>Overview</h2>
+        <p>Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports findings to a SIEM-style backend for administrators.</p>
+      </section>
+      <section>
+        <h2>Screenshots</h2>
+        <div class="gallery"><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/dlp-engine-output.png" alt="Terminal output showing a prompt containing a fake AWS key and SSN, scored 10 out of 10, with each finding listed using a masked value." width="1960" height="762" loading="lazy"><figcaption>Real engine output for a fake prompt (an AWS documentation example key and a sample SSN). Every stored value is masked.</figcaption></figure><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/architecture.svg" alt="Diagram: client devices send traffic to a TLS-inspecting proxy that matches AI domains, extracts prompts and runs DLP classification; redacted events go to a backend API and a planned dashboard." width="900" height="300" loading="lazy"><figcaption>Data flow from client to proxy to backend. The admin dashboard is planned and not yet built.</figcaption></figure></div>
+      </section>
+      <section>
+        <h2>The problem</h2>
+        <p>Employees paste source code, API keys and customer data into AI tools every day, and browser-extension monitors miss API calls and non-browser apps entirely. A network control sees all of it, and mirrors the SSL-inspection model organizations already run on their firewalls.</p>
+      </section>
+      <section>
+        <h2>How it works</h2>
+        <p>A mitmproxy add-on matches traffic against a registry of known AI services, then uses per-provider extractors to pull out only the text the user typed — not system prompts or earlier turns.</p><p>A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.</p><p>The detector is redaction-first: it never stores or returns the raw match, only a masked snippet, so the monitoring tool cannot become a new store of secrets. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo.</p>
+      </section>
+      <section>
+        <h2>Highlights</h2>
+        <ul class="bullets"><li>Redaction by design: findings carry the rule, category, weight and a masked snippet — never the secret itself.</li><li>Luhn validation removes most false positives on credit-card-shaped numbers.</li><li>Extractors for the OpenAI, Anthropic and Gemini request formats, plus a best-effort web-UI parser.</li><li>29 automated tests across the DLP engine, extractors and the FastAPI ingestion backend.</li></ul>
+      </section>
+      <section>
+        <h2>What's next</h2>
+        <ul class="bullets"><li>Validate the proxy add-on against real captured traffic for each provider.</li><li>Build the admin dashboard.</li><li>Root CA and PAC/GPO deployment tooling, with certificate-pinning checks.</li><li>Multi-tenant separation and per-client keyword lists.</li></ul>
+      </section>
+    </article>
+  </main>
+  <footer class="wrap foot">
+    <p>© 2026 Alen Frashnishta</p>
+  </footer>
+</body>
+</html>

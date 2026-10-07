@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; data:; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;">
+  <meta name="referrer" content="no-referrer">
+  <title>Projects — Alen Frashnishta</title>
+  <meta name="description" content="Security tools and prototypes by Alen Frashnishta.">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <nav class="wrap nav" aria-label="Primary">
+      <a class="brand" href="../index.html">AF</a>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../projects/index.html">Projects</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="wrap pagehead">
+      <p class="eyebrow">Projects</p>
+      <h1>Things I've built</h1>
+      <p class="lead">Security tools and prototypes, with what they do, how they work and where they're headed.</p>
+    </section>
+    <section class="wrap">
+      <div class="cards">
+        <article class="card">
+          <a class="card-thumb" href="../projects/lightweight-siem/index.html" tabindex="-1" aria-hidden="true"><img src="../assets/projects/lightweight-siem/dashboard-light.png" alt="Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges." width="1800" height="2180" loading="lazy"></a>
+          <p class="status">Working prototype · 2026</p>
+          <h3><a href="../projects/lightweight-siem/index.html">Lightweight SIEM</a></h3>
+          <p>A subscription service for non-technical people — often parents and grandparents. It scans their email for phishing, scores every suspicious message from 1 to 10 with a plain-language explanation, and alerts a linked family member so they can step in before money or credentials are lost.</p>
+          <p class="tags"><span>Python</span><span>FastAPI</span><span>SQLAlchemy</span><span>React</span><span>TypeScript</span><span>Vite</span><span>OAuth 2.0</span></p>
+          <a class="more" href="../projects/lightweight-siem/index.html">Read the case study →</a>
+        </article>
+        <article class="card">
+          <a class="card-thumb" href="../projects/ai-security-agent/index.html" tabindex="-1" aria-hidden="true"><img src="../assets/projects/ai-security-agent/dlp-engine-output.png" alt="Terminal output showing a prompt containing a fake AWS key and SSN, scored 10 out of 10, with each finding listed using a masked value." width="1960" height="762" loading="lazy"></a>
+          <p class="status">In development · 2026</p>
+          <h3><a href="../projects/ai-security-agent/index.html">AI Security Agent</a></h3>
+          <p>Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports findings to a SIEM-style backend for administrators.</p>
+          <p class="tags"><span>Python</span><span>mitmproxy</span><span>FastAPI</span><span>SQLAlchemy</span><span>pytest</span></p>
+          <a class="more" href="../projects/ai-security-agent/index.html">Read the case study →</a>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap foot">
+    <p>© 2026 Alen Frashnishta</p>
+  </footer>
+</body>
+</html>

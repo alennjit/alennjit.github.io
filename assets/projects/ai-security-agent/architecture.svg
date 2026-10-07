@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img" aria-labelledby="t d">
+  <title id="t">AI Security Agent architecture</title>
+  <desc id="d">Client traffic passes through a TLS-inspecting proxy that extracts prompts and runs DLP classifiers; redacted events go to a backend API and a planned admin dashboard.</desc>
+  <style>
+    :root { --bg:#fcfcfb; --box:#ffffff; --line:#c9d1dc; --ink:#0e1a2b; --muted:#5b6778; --accent:#0f6f8f; --soft:#e4f2f6; --warn:#b8790f; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#121c2d; --box:#17243a; --line:#2b3b57; --ink:#eef2f7; --muted:#9aa8bb; --accent:#4cc3e0; --soft:#11303d; --warn:#fab219; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: var(--ink); }
+    .sub { fill: var(--muted); font-size: 12px; }
+    .t { font-size: 15px; font-weight: 700; }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.5; }
+    .hot { fill: var(--soft); stroke: var(--accent); stroke-width: 2; }
+    .plan { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .arrow { stroke: var(--accent); stroke-width: 2; fill: none; marker-end: url(#h); }
+  </style>
+  <defs><marker id="h" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 Z" fill="#0f6f8f"/></marker></defs>
+  <rect width="900" height="300" fill="var(--bg)" rx="14"/>
+
+  <rect class="box" x="24" y="95" width="150" height="110" rx="12"/>
+  <text class="t" x="99" y="138" text-anchor="middle">Client devices</text>
+  <text class="sub" x="99" y="160" text-anchor="middle">traffic routed via</text>
+  <text class="sub" x="99" y="177" text-anchor="middle">PAC / GPO</text>
+
+  <path class="arrow" d="M174 150 H230"/>
+
+  <rect class="hot" x="232" y="40" width="300" height="220" rx="14"/>
+  <text class="t" x="382" y="68" text-anchor="middle">TLS-inspecting proxy</text>
+  <rect class="box" x="254" y="86" width="256" height="48" rx="9"/>
+  <text class="t" x="382" y="107" text-anchor="middle" style="font-size:13px">1 · Match AI domain</text>
+  <text class="sub" x="382" y="124" text-anchor="middle">OpenAI · Anthropic · Google · more</text>
+  <rect class="box" x="254" y="144" width="256" height="48" rx="9"/>
+  <text class="t" x="382" y="165" text-anchor="middle" style="font-size:13px">2 · Extract the prompt</text>
+  <text class="sub" x="382" y="182" text-anchor="middle">per-provider parsers</text>
+  <rect class="box" x="254" y="202" width="256" height="48" rx="9"/>
+  <text class="t" x="382" y="223" text-anchor="middle" style="font-size:13px">3 · DLP classify + redact</text>
+  <text class="sub" x="382" y="240" text-anchor="middle">secrets · PII · confidential markers</text>
+
+  <path class="arrow" d="M532 150 H588"/>
+  <text class="sub" x="560" y="138" text-anchor="middle">redacted</text>
+  <text class="sub" x="560" y="176" text-anchor="middle">events</text>
+
+  <rect class="box" x="590" y="95" width="130" height="110" rx="12"/>
+  <text class="t" x="655" y="138" text-anchor="middle">Backend API</text>
+  <text class="sub" x="655" y="160" text-anchor="middle">FastAPI</text>
+  <text class="sub" x="655" y="177" text-anchor="middle">event store</text>
+
+  <path class="arrow" d="M720 150 H766"/>
+
+  <rect class="plan" x="768" y="95" width="108" height="110" rx="12"/>
+  <text class="t" x="822" y="138" text-anchor="middle">Dashboard</text>
+  <text class="sub" x="822" y="160" text-anchor="middle" style="fill:var(--warn)">planned</text>
+</svg>

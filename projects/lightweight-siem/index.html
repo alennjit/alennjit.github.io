@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; data:; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;">
+  <meta name="referrer" content="no-referrer">
+  <title>Lightweight SIEM — Alen Frashnishta</title>
+  <meta name="description" content="Phishing and scam protection for the people in your family who are most likely to be targeted.">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <nav class="wrap nav" aria-label="Primary">
+      <a class="brand" href="../../index.html">AF</a>
+      <ul>
+        <li><a href="../../index.html">Home</a></li>
+        <li><a href="../../projects/index.html">Projects</a></li>
+        <li><a href="../../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main">
+    <article class="wrap project">
+      <p class="crumbs"><a href="../../projects/index.html">Projects</a> / Lightweight SIEM</p>
+      <header class="pagehead">
+        <h1>Lightweight SIEM</h1>
+        <p class="lead">Phishing and scam protection for the people in your family who are most likely to be targeted.</p>
+        <p class="status">Working prototype · 2026</p>
+        <p class="tags"><span>Python</span><span>FastAPI</span><span>SQLAlchemy</span><span>React</span><span>TypeScript</span><span>Vite</span><span>OAuth 2.0</span></p>
+        <p class="cta"><a class="btn primary" href="https://github.com/alennjit/Lightweight-SIEM" rel="noopener noreferrer">Source on GitHub</a></p>
+      </header>
+      <section>
+        <h2>Overview</h2>
+        <p>A subscription service for non-technical people — often parents and grandparents. It scans their email for phishing, scores every suspicious message from 1 to 10 with a plain-language explanation, and alerts a linked family member so they can step in before money or credentials are lost.</p>
+      </section>
+      <section>
+        <h2>Screenshots</h2>
+        <div class="gallery"><figure class="shot"><img src="../../assets/projects/lightweight-siem/dashboard-light.png" alt="Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges." width="1800" height="2180" loading="lazy"><figcaption>The monitor dashboard: summary tiles, then each flagged message with a severity label, score and plain-language reason.</figcaption></figure><figure class="shot"><img src="../../assets/projects/lightweight-siem/dashboard-dark.png" alt="The same dashboard in dark mode." width="1800" height="2180" loading="lazy"><figcaption>Dark mode uses the same layout with a separately tuned palette.</figcaption></figure><figure class="shot"><img src="../../assets/projects/lightweight-siem/detection-test-tool.png" alt="Developer test form that submits a sample email and shows a flagged result with a 10 out of 10 score." width="1440" height="1604" loading="lazy"><figcaption>A built-in test tool submits a sample email through the same scoring pipeline the real ingestion path uses.</figcaption></figure></div>
+      </section>
+      <section>
+        <h2>The problem</h2>
+        <p>Enterprise SIEMs are built for security teams. The people who actually lose money to phishing are often retirees with no security team at all — and the relative who would help has no visibility until it is too late. This project is a deliberately small detection and alerting pipeline built around one relationship: one protected person, one or more family monitors.</p>
+      </section>
+      <section>
+        <h2>How it works</h2>
+        <p>A rule-based heuristic engine scores each message for brand impersonation, look-alike and punycode domains, IP-literal links, URL shorteners, abused TLDs, free-webmail senders claiming to be a bank, and urgency or credential-harvesting language. Every score ships with a human-readable rationale, never a bare number.</p><p>Gmail connects through OAuth 2.0 with the narrowest scope that supports the design. Access and refresh tokens are encrypted at rest, state is protected by a CSRF cookie, and only message headers, sender and links feed the first-pass scoring.</p><p>The monitor dashboard is a React and TypeScript app. Everything that came from a phishing email is treated as attacker-controlled: it renders as plain text only, and flagged links are shown inert, never clickable.</p>
+      </section>
+      <section>
+        <h2>Highlights</h2>
+        <ul class="bullets"><li>Privacy-first design: data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.</li><li>Gmail OAuth flow with Fernet-encrypted tokens, automatic refresh, and manual-trigger ingestion into the same scoring engine.</li><li>40 automated tests, with every external service mocked.</li><li>Dashboard built for a worried family member, not an analyst: plain-language severity labels and light and dark themes.</li></ul>
+      </section>
+      <section>
+        <h2>What's next</h2>
+        <ul class="bullets"><li>Verify the Gmail connection against a live inbox and add background polling.</li><li>Family linking and consent flow, then alert delivery by email, push and SMS.</li><li>Browser extension for link checks at click time.</li><li>Threat-intelligence lookups and AI-written risk narratives, sent only after a heuristic flag.</li></ul>
+      </section>
+    </article>
+  </main>
+  <footer class="wrap foot">
+    <p>© 2026 Alen Frashnishta</p>
+  </footer>
+</body>
+</html>
