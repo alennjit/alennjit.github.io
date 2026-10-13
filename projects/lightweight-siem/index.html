@@ -28,9 +28,9 @@
       <header class="pagehead">
         <h1>Lightweight SIEM</h1>
         <p class="lead">Phishing and scam protection for the people in your family who are most likely to be targeted.</p>
-        <p class="status">Working prototype · 2026</p>
+        <p class="status">Working prototype · live demo · 2026</p>
         <p class="tags"><span>Python</span><span>FastAPI</span><span>SQLAlchemy</span><span>React</span><span>TypeScript</span><span>Vite</span><span>OAuth 2.0</span></p>
-        <p class="cta"><a class="btn primary" href="https://github.com/alennjit/Lightweight-SIEM" rel="noopener noreferrer">Source on GitHub</a></p>
+        <p class="cta"><a class="btn primary" href="https://alennjit.github.io/Lightweight-SIEM/" rel="noopener noreferrer">Live demo</a><a class="btn primary" href="https://github.com/alennjit/Lightweight-SIEM" rel="noopener noreferrer">Source on GitHub</a></p>
       </header>
       <section>
         <h2>Overview</h2>
@@ -38,7 +38,7 @@
       </section>
       <section>
         <h2>Screenshots</h2>
-        <div class="gallery"><figure class="shot"><img src="../../assets/projects/lightweight-siem/dashboard-light.png" alt="Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges." width="1800" height="2180" loading="lazy"><figcaption>The monitor dashboard: summary tiles, then each flagged message with a severity label, score and plain-language reason.</figcaption></figure><figure class="shot"><img src="../../assets/projects/lightweight-siem/dashboard-dark.png" alt="The same dashboard in dark mode." width="1800" height="2180" loading="lazy"><figcaption>Dark mode uses the same layout with a separately tuned palette.</figcaption></figure><figure class="shot"><img src="../../assets/projects/lightweight-siem/detection-test-tool.png" alt="Developer test form that submits a sample email and shows a flagged result with a 10 out of 10 score." width="1440" height="1604" loading="lazy"><figcaption>A built-in test tool submits a sample email through the same scoring pipeline the real ingestion path uses.</figcaption></figure></div>
+        <div class="gallery"><figure class="shot"><img src="../../assets/projects/lightweight-siem/dashboard-light.png" alt="Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges." width="1800" height="3564" loading="lazy"><figcaption>The monitor dashboard, as it appears in the live demo: summary tiles, then each flagged message with a severity label, score and plain-language reason.</figcaption></figure><figure class="shot"><img src="../../assets/projects/lightweight-siem/dashboard-dark.png" alt="The same dashboard in dark mode." width="1800" height="3564" loading="lazy"><figcaption>Dark mode uses the same layout with a separately tuned palette.</figcaption></figure><figure class="shot"><img src="../../assets/projects/lightweight-siem/detection-test-tool.png" alt="Developer test form that submits a sample email and shows a flagged result with a 10 out of 10 score." width="1440" height="1604" loading="lazy"><figcaption>A built-in test tool submits a sample email through the same scoring pipeline the real ingestion path uses.</figcaption></figure></div>
       </section>
       <section>
         <h2>The problem</h2>
@@ -50,7 +50,7 @@
       </section>
       <section>
         <h2>Highlights</h2>
-        <ul class="bullets"><li>Privacy-first design: data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.</li><li>Gmail OAuth flow with Fernet-encrypted tokens, automatic refresh, and manual-trigger ingestion into the same scoring engine.</li><li>40 automated tests, with every external service mocked.</li><li>Dashboard built for a worried family member, not an analyst: plain-language severity labels and light and dark themes.</li></ul>
+        <ul class="bullets"><li>Privacy-first design: data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.</li><li>Gmail OAuth flow with Fernet-encrypted tokens, automatic refresh, and manual-trigger ingestion into the same scoring engine.</li><li>40 automated tests, with every external service mocked.</li><li>Dashboard built for a worried family member, not an analyst: plain-language severity labels and light and dark themes.</li><li>Public demo deployed to GitHub Pages by GitHub Actions: no backend, a strict Content Security Policy, and sample alerts whose scores and explanations are real output from the detection engine.</li></ul>
       </section>
       <section>
         <h2>What's next</h2>

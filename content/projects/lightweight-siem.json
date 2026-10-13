@@ -1,7 +1,7 @@
 {
   "title": "Lightweight SIEM",
   "tagline": "Phishing and scam protection for the people in your family who are most likely to be targeted.",
-  "status": "Working prototype",
+  "status": "Working prototype · live demo",
   "year": "2026",
   "order": 1,
   "summary": "A subscription service for non-technical people — often parents and grandparents. It scans their email for phishing, scores every suspicious message from 1 to 10 with a plain-language explanation, and alerts a linked family member so they can step in before money or credentials are lost.",
@@ -15,7 +15,8 @@
     "Privacy-first design: data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.",
     "Gmail OAuth flow with Fernet-encrypted tokens, automatic refresh, and manual-trigger ingestion into the same scoring engine.",
     "40 automated tests, with every external service mocked.",
-    "Dashboard built for a worried family member, not an analyst: plain-language severity labels and light and dark themes."
+    "Dashboard built for a worried family member, not an analyst: plain-language severity labels and light and dark themes.",
+    "Public demo deployed to GitHub Pages by GitHub Actions: no backend, a strict Content Security Policy, and sample alerts whose scores and explanations are real output from the detection engine."
   ],
   "stack": ["Python", "FastAPI", "SQLAlchemy", "React", "TypeScript", "Vite", "OAuth 2.0"],
   "next": [
@@ -25,10 +26,11 @@
     "Threat-intelligence lookups and AI-written risk narratives, sent only after a heuristic flag."
   ],
   "links": [
+    { "label": "Live demo", "url": "https://alennjit.github.io/Lightweight-SIEM/" },
     { "label": "Source on GitHub", "url": "https://github.com/alennjit/Lightweight-SIEM" }
   ],
   "screenshots": [
-    { "file": "dashboard-light.png", "alt": "Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges.", "caption": "The monitor dashboard: summary tiles, then each flagged message with a severity label, score and plain-language reason." },
+    { "file": "dashboard-light.png", "alt": "Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges.", "caption": "The monitor dashboard, as it appears in the live demo: summary tiles, then each flagged message with a severity label, score and plain-language reason." },
     { "file": "dashboard-dark.png", "alt": "The same dashboard in dark mode.", "caption": "Dark mode uses the same layout with a separately tuned palette." },
     { "file": "detection-test-tool.png", "alt": "Developer test form that submits a sample email and shows a flagged result with a 10 out of 10 score.", "caption": "A built-in test tool submits a sample email through the same scoring pipeline the real ingestion path uses." }
   ]
