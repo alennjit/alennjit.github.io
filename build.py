@@ -52,6 +52,23 @@ class Link:
     url: str
 
 
+COVERAGE_STATUS = {
+    "verified": "Verified on live traffic",
+    "unverified": "Written, not yet verified",
+    "unsupported": "Not supported yet",
+}
+
+
+@dataclass(frozen=True)
+class CoverageRow:
+    """One line of an honest 'what works' table (optional per project)."""
+
+    service: str
+    where: str
+    status: str  # key of COVERAGE_STATUS
+    note: str
+
+
 @dataclass(frozen=True)
 class Project:
     slug: str
@@ -68,6 +85,7 @@ class Project:
     next_steps: list[str]
     links: list[Link]
     screenshots: list[Screenshot]
+    coverage: list[CoverageRow]
 
 
 # ---------------------------------------------------------------- loading
@@ -99,6 +117,12 @@ def _load_link(slug: str, raw: dict) -> Link:
     return Link(raw["label"], raw["url"])
 
 
+def _load_coverage(slug: str, raw: dict) -> CoverageRow:
+    if raw["status"] not in COVERAGE_STATUS:
+        raise ValueError(f"[{slug}] coverage status must be one of {sorted(COVERAGE_STATUS)}: {raw['status']}")
+    return CoverageRow(raw["service"], raw["where"], raw["status"], raw["note"])
+
+
 def load_projects() -> list[Project]:
     """Load and validate every project JSON file, sorted by its `order`."""
     projects: list[Project] = []
@@ -123,6 +147,7 @@ def load_projects() -> list[Project]:
                 next_steps=list(raw["next"]),
                 links=[_load_link(slug, link) for link in raw["links"]],
                 screenshots=[_load_screenshot(slug, s) for s in raw["screenshots"]],
+                coverage=[_load_coverage(slug, c) for c in raw.get("coverage", [])],
             )
         )
     projects.sort(key=lambda p: (p.order, p.title))
@@ -219,6 +244,27 @@ def render_gallery(project: Project, prefix: str) -> str:
     return '<div class="gallery">' + "".join(figures) + "</div>"
 
 
+def render_coverage(project: Project) -> str:
+    """Optional 'Coverage' section: an honest table of what is and isn't verified."""
+    if not project.coverage:
+        return ""
+    rows = "".join(
+        f"<tr><th scope=\"row\">{esc(c.service)}</th><td>{esc(c.where)}</td>"
+        f"<td><span class=\"cov cov--{c.status}\">{esc(COVERAGE_STATUS[c.status])}</span></td>"
+        f"<td>{esc(c.note)}</td></tr>"
+        for c in project.coverage
+    )
+    return f"""      <section>
+        <h2>Coverage</h2>
+        <p>What has been tested against real traffic, and what hasn't.</p>
+        <div class="table-scroll"><table class="coverage">
+          <thead><tr><th scope="col">Service</th><th scope="col">Where</th><th scope="col">Status</th><th scope="col">Notes</th></tr></thead>
+          <tbody>{rows}</tbody>
+        </table></div>
+      </section>
+"""
+
+
 def render_project_page(project: Project) -> str:
     prefix = "../../"
     links = "".join(
@@ -253,7 +299,7 @@ def render_project_page(project: Project) -> str:
         <h2>How it works</h2>
         {approach}
       </section>
-      <section>
+{render_coverage(project)}      <section>
         <h2>Highlights</h2>
         <ul class="bullets">{highlights}</ul>
       </section>

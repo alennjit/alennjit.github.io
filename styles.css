@@ -115,6 +115,20 @@ p { margin: 0 0 14px; }
 .shot img { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .shot figcaption { color: var(--muted); font-size: .9rem; margin-top: 10px; }
 
+.table-scroll { overflow-x: auto; position: relative; }
+.coverage { width: 100%; border-collapse: collapse; min-width: 640px; font-size: .93rem; }
+.coverage th, .coverage td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.coverage thead th { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.coverage tbody th { color: var(--ink); font-weight: 600; white-space: nowrap; }
+.cov { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+.cov--verified { background: #e1f4e1; color: #0a6b0a; }
+.cov--unverified { background: #fdf0d5; color: #8a5a00; }
+.cov--unsupported { background: var(--accent-soft); color: var(--muted); }
+@media (prefers-color-scheme: dark) {
+  .cov--verified { background: #12291a; color: #5fd35f; }
+  .cov--unverified { background: #332708; color: #fab219; }
+}
+
 /* Skills */
 .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px 28px; margin: 0; }
 .skills dt { color: var(--ink); font-weight: 700; font-size: .95rem; }

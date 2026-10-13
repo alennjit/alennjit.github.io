@@ -7,15 +7,17 @@
     "summary":  "Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports redacted findings to a SIEM-style admin dashboard.",
     "problem":  "Employees paste source code, API keys and customer data into AI tools every day, and browser-extension monitors miss API calls and non-browser apps entirely. A network control sees all of it, and mirrors the SSL-inspection model organizations already run on their firewalls.",
     "approach":  [
-                     "A mitmproxy add-on matches traffic against a registry of known AI services, then uses per-provider extractors to pull out only the text the user typed — not system prompts or earlier turns. Events are delivered on a worker thread, so a slow backend can never stall a user\u0027s request.",
+                     "A mitmproxy add-on matches each request by host and path against a registry of known AI services, then uses a per-provider extractor to pull out only the text the user typed — not system prompts, earlier turns or analytics beacons. Events are delivered on a worker thread, so a slow backend can never stall a user\u0027s request.",
                      "A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.",
                      "The detector is redaction-first: it never stores or returns the raw match, so the monitoring tool cannot become a new store of secrets. The admin dashboard shows only the risk summary, data types and counts. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo."
                  ],
     "highlights":  [
-                       "Validated end to end on live traffic: real requests to the OpenAI, Anthropic and Gemini APIs through a local test proxy produced redacted events and nothing else — the test CA was never installed system-wide.",
+                       "Validated on live traffic, not just unit tests: real requests to the OpenAI, Anthropic and Gemini APIs, plus real browser sessions on Gemini and Perplexity, through a local test proxy. The test CA was never installed system-wide.",
+                       "Found and fixed a real gap: the first browser test recorded zero events, because chat UIs use their own request formats — Gemini nests JSON inside JSON inside a form field. Endpoint-aware parsers now catch them.",
+                       "Perplexity echoes each prompt into analytics beacons. The registry matches on path, so the beacons are ignored and a prompt is reported exactly once.",
                        "Redaction by design: findings carry the rule, category and weight — never the secret itself.",
                        "Admin dashboard with summary tiles, breakdowns by AI service and data type, filters, per-event rationale and live refresh, in light and dark mode.",
-                       "38 automated tests across the DLP engine, extractors, proxy add-on and the FastAPI backend."
+                       "56 automated tests across the DLP engine, extractors, proxy add-on and backend. A small capture tool records request structure — never prompt text — for building new parsers."
                    ],
     "stack":  [
                   "Python",
@@ -25,10 +27,10 @@
                   "pytest"
               ],
     "next":  [
-                 "Validate browser web-UI traffic (ChatGPT, Claude, Gemini) against the generic web-UI extractor.",
+                 "Capture ChatGPT and Claude web traffic from a signed-in session. ChatGPT blocks automated browsers, and claude.ai needs a login, so those parsers are written but unverified.",
+                 "Inspect Microsoft Copilot, which chats over a WebSocket rather than plain requests.",
                  "Authentication, plus a per-device drill-down and trend charts in the dashboard.",
-                 "Root CA and PAC/GPO deployment tooling, with certificate-pinning checks.",
-                 "Multi-tenant separation and per-client keyword lists."
+                 "Root CA and PAC/GPO deployment tooling, with certificate-pinning checks, then multi-tenant separation."
              ],
     "links":  [
                   {
@@ -40,7 +42,7 @@
                         {
                             "file":  "dashboard-light.png",
                             "alt":  "AI Security Agent admin dashboard in light mode: summary tiles, breakdown by AI service and data type, and a table of flagged prompts with risk badges.",
-                            "caption":  "The admin dashboard, fed by a real proxy run: nine flagged prompts from four client addresses, with the first event\u0027s rationale expanded."
+                            "caption":  "The admin dashboard, fed by real proxy runs: flagged prompts from API calls and from browser sessions (rows marked Web app), with the first event\u0027s rationale expanded."
                         },
                         {
                             "file":  "dashboard-dark.png",
@@ -59,5 +61,61 @@
                             "width":  900,
                             "height":  300
                         }
-                    ]
+                    ],
+    "coverage":  [
+                     {
+                         "where":  "API",
+                         "status":  "verified",
+                         "service":  "OpenAI",
+                         "note":  "Chat Completions requests."
+                     },
+                     {
+                         "where":  "API",
+                         "status":  "verified",
+                         "service":  "Anthropic",
+                         "note":  "Messages API requests."
+                     },
+                     {
+                         "where":  "API",
+                         "status":  "verified",
+                         "service":  "Google Gemini",
+                         "note":  "generateContent requests."
+                     },
+                     {
+                         "where":  "Web app",
+                         "status":  "verified",
+                         "service":  "Gemini",
+                         "note":  "Caught in a real browser session. The prompt sits inside JSON nested in JSON in a form field; decoded step by step."
+                     },
+                     {
+                         "where":  "Web app",
+                         "status":  "verified",
+                         "service":  "Perplexity",
+                         "note":  "Caught in a real browser session. Analytics beacons that echo the prompt are deliberately ignored."
+                     },
+                     {
+                         "where":  "Web app",
+                         "status":  "unverified",
+                         "service":  "ChatGPT",
+                         "note":  "Cloudflare blocks automated capture. The parser follows the commonly reported format and fails safe."
+                     },
+                     {
+                         "where":  "Web app",
+                         "status":  "unverified",
+                         "service":  "Claude",
+                         "note":  "Needs a signed-in session to capture. Parser follows the commonly reported format."
+                     },
+                     {
+                         "where":  "Web app",
+                         "status":  "unsupported",
+                         "service":  "Microsoft Copilot",
+                         "note":  "Chats over a WebSocket, which needs a message-level hook."
+                     },
+                     {
+                         "where":  "Web app",
+                         "status":  "unverified",
+                         "service":  "Mistral, Grok",
+                         "note":  "Generic fallback parser only."
+                     }
+                 ]
 }
