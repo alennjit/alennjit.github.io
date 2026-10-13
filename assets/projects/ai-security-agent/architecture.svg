@@ -45,7 +45,8 @@
 
   <path class="arrow" d="M720 150 H766"/>
 
-  <rect class="plan" x="768" y="95" width="108" height="110" rx="12"/>
+  <rect class="box" x="768" y="95" width="108" height="110" rx="12"/>
   <text class="t" x="822" y="138" text-anchor="middle">Dashboard</text>
-  <text class="sub" x="822" y="160" text-anchor="middle" style="fill:var(--warn)">planned</text>
+  <text class="sub" x="822" y="160" text-anchor="middle">React admin UI</text>
+  <text class="sub" x="822" y="177" text-anchor="middle">live view</text>
 </svg>

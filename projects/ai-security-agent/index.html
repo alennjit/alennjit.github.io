@@ -28,17 +28,17 @@
       <header class="pagehead">
         <h1>AI Security Agent</h1>
         <p class="lead">Catch confidential data before it is pasted into an AI chatbot.</p>
-        <p class="status">In development · 2026</p>
+        <p class="status">Working prototype · 2026</p>
         <p class="tags"><span>Python</span><span>mitmproxy</span><span>FastAPI</span><span>SQLAlchemy</span><span>pytest</span></p>
         <p class="cta"><a class="btn primary" href="https://github.com/alennjit/AI-Security-Agent" rel="noopener noreferrer">Source on GitHub</a></p>
       </header>
       <section>
         <h2>Overview</h2>
-        <p>Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports findings to a SIEM-style backend for administrators.</p>
+        <p>Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports redacted findings to a SIEM-style admin dashboard.</p>
       </section>
       <section>
         <h2>Screenshots</h2>
-        <div class="gallery"><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/dlp-engine-output.png" alt="Terminal output showing a prompt containing a fake AWS key and SSN, scored 10 out of 10, with each finding listed using a masked value." width="1960" height="762" loading="lazy"><figcaption>Real engine output for a fake prompt (an AWS documentation example key and a sample SSN). Every stored value is masked.</figcaption></figure><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/architecture.svg" alt="Diagram: client devices send traffic to a TLS-inspecting proxy that matches AI domains, extracts prompts and runs DLP classification; redacted events go to a backend API and a planned dashboard." width="900" height="300" loading="lazy"><figcaption>Data flow from client to proxy to backend. The admin dashboard is planned and not yet built.</figcaption></figure></div>
+        <div class="gallery"><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/dashboard-light.png" alt="AI Security Agent admin dashboard in light mode: summary tiles, breakdown by AI service and data type, and a table of flagged prompts with risk badges." width="2560" height="2300" loading="lazy"><figcaption>The admin dashboard, fed by a real proxy run: nine flagged prompts from four client addresses, with the first event&#x27;s rationale expanded.</figcaption></figure><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/dashboard-dark.png" alt="The same dashboard in dark mode." width="2560" height="2300" loading="lazy"><figcaption>Dark mode. Severity is shown by icon and label as well as color.</figcaption></figure><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/dlp-engine-output.png" alt="Terminal output showing a prompt containing a fake AWS key and SSN, scored 10 out of 10, with each finding listed using a masked value." width="1960" height="762" loading="lazy"><figcaption>Real engine output for a fake prompt (an AWS documentation example key and a sample SSN). Every stored value is masked.</figcaption></figure><figure class="shot wide"><img src="../../assets/projects/ai-security-agent/architecture.svg" alt="Diagram: client devices send traffic to a TLS-inspecting proxy that matches AI domains, extracts prompts and runs DLP classification; redacted events go to a backend API and the admin dashboard." width="900" height="300" loading="lazy"><figcaption>Data flow from client to proxy to backend to dashboard.</figcaption></figure></div>
       </section>
       <section>
         <h2>The problem</h2>
@@ -46,15 +46,15 @@
       </section>
       <section>
         <h2>How it works</h2>
-        <p>A mitmproxy add-on matches traffic against a registry of known AI services, then uses per-provider extractors to pull out only the text the user typed — not system prompts or earlier turns.</p><p>A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.</p><p>The detector is redaction-first: it never stores or returns the raw match, only a masked snippet, so the monitoring tool cannot become a new store of secrets. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo.</p>
+        <p>A mitmproxy add-on matches traffic against a registry of known AI services, then uses per-provider extractors to pull out only the text the user typed — not system prompts or earlier turns. Events are delivered on a worker thread, so a slow backend can never stall a user&#x27;s request.</p><p>A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.</p><p>The detector is redaction-first: it never stores or returns the raw match, so the monitoring tool cannot become a new store of secrets. The admin dashboard shows only the risk summary, data types and counts. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo.</p>
       </section>
       <section>
         <h2>Highlights</h2>
-        <ul class="bullets"><li>Redaction by design: findings carry the rule, category, weight and a masked snippet — never the secret itself.</li><li>Luhn validation removes most false positives on credit-card-shaped numbers.</li><li>Extractors for the OpenAI, Anthropic and Gemini request formats, plus a best-effort web-UI parser.</li><li>29 automated tests across the DLP engine, extractors and the FastAPI ingestion backend.</li></ul>
+        <ul class="bullets"><li>Validated end to end on live traffic: real requests to the OpenAI, Anthropic and Gemini APIs through a local test proxy produced redacted events and nothing else — the test CA was never installed system-wide.</li><li>Redaction by design: findings carry the rule, category and weight — never the secret itself.</li><li>Admin dashboard with summary tiles, breakdowns by AI service and data type, filters, per-event rationale and live refresh, in light and dark mode.</li><li>38 automated tests across the DLP engine, extractors, proxy add-on and the FastAPI backend.</li></ul>
       </section>
       <section>
         <h2>What's next</h2>
-        <ul class="bullets"><li>Validate the proxy add-on against real captured traffic for each provider.</li><li>Build the admin dashboard.</li><li>Root CA and PAC/GPO deployment tooling, with certificate-pinning checks.</li><li>Multi-tenant separation and per-client keyword lists.</li></ul>
+        <ul class="bullets"><li>Validate browser web-UI traffic (ChatGPT, Claude, Gemini) against the generic web-UI extractor.</li><li>Authentication, plus a per-device drill-down and trend charts in the dashboard.</li><li>Root CA and PAC/GPO deployment tooling, with certificate-pinning checks.</li><li>Multi-tenant separation and per-client keyword lists.</li></ul>
       </section>
     </article>
   </main>

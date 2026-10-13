@@ -1,34 +1,63 @@
 {
-  "title": "AI Security Agent",
-  "tagline": "Catch confidential data before it is pasted into an AI chatbot.",
-  "status": "In development",
-  "year": "2026",
-  "order": 2,
-  "summary": "Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports findings to a SIEM-style backend for administrators.",
-  "problem": "Employees paste source code, API keys and customer data into AI tools every day, and browser-extension monitors miss API calls and non-browser apps entirely. A network control sees all of it, and mirrors the SSL-inspection model organizations already run on their firewalls.",
-  "approach": [
-    "A mitmproxy add-on matches traffic against a registry of known AI services, then uses per-provider extractors to pull out only the text the user typed — not system prompts or earlier turns.",
-    "A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.",
-    "The detector is redaction-first: it never stores or returns the raw match, only a masked snippet, so the monitoring tool cannot become a new store of secrets. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo."
-  ],
-  "highlights": [
-    "Redaction by design: findings carry the rule, category, weight and a masked snippet — never the secret itself.",
-    "Luhn validation removes most false positives on credit-card-shaped numbers.",
-    "Extractors for the OpenAI, Anthropic and Gemini request formats, plus a best-effort web-UI parser.",
-    "29 automated tests across the DLP engine, extractors and the FastAPI ingestion backend."
-  ],
-  "stack": ["Python", "mitmproxy", "FastAPI", "SQLAlchemy", "pytest"],
-  "next": [
-    "Validate the proxy add-on against real captured traffic for each provider.",
-    "Build the admin dashboard.",
-    "Root CA and PAC/GPO deployment tooling, with certificate-pinning checks.",
-    "Multi-tenant separation and per-client keyword lists."
-  ],
-  "links": [
-    { "label": "Source on GitHub", "url": "https://github.com/alennjit/AI-Security-Agent" }
-  ],
-  "screenshots": [
-    { "file": "dlp-engine-output.png", "alt": "Terminal output showing a prompt containing a fake AWS key and SSN, scored 10 out of 10, with each finding listed using a masked value.", "caption": "Real engine output for a fake prompt (an AWS documentation example key and a sample SSN). Every stored value is masked." },
-    { "file": "architecture.svg", "alt": "Diagram: client devices send traffic to a TLS-inspecting proxy that matches AI domains, extracts prompts and runs DLP classification; redacted events go to a backend API and a planned dashboard.", "caption": "Data flow from client to proxy to backend. The admin dashboard is planned and not yet built.", "width": 900, "height": 300 }
-  ]
+    "title":  "AI Security Agent",
+    "tagline":  "Catch confidential data before it is pasted into an AI chatbot.",
+    "status":  "Working prototype",
+    "year":  "2026",
+    "order":  2,
+    "summary":  "Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports redacted findings to a SIEM-style admin dashboard.",
+    "problem":  "Employees paste source code, API keys and customer data into AI tools every day, and browser-extension monitors miss API calls and non-browser apps entirely. A network control sees all of it, and mirrors the SSL-inspection model organizations already run on their firewalls.",
+    "approach":  [
+                     "A mitmproxy add-on matches traffic against a registry of known AI services, then uses per-provider extractors to pull out only the text the user typed — not system prompts or earlier turns. Events are delivered on a worker thread, so a slow backend can never stall a user\u0027s request.",
+                     "A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.",
+                     "The detector is redaction-first: it never stores or returns the raw match, so the monitoring tool cannot become a new store of secrets. The admin dashboard shows only the risk summary, data types and counts. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo."
+                 ],
+    "highlights":  [
+                       "Validated end to end on live traffic: real requests to the OpenAI, Anthropic and Gemini APIs through a local test proxy produced redacted events and nothing else — the test CA was never installed system-wide.",
+                       "Redaction by design: findings carry the rule, category and weight — never the secret itself.",
+                       "Admin dashboard with summary tiles, breakdowns by AI service and data type, filters, per-event rationale and live refresh, in light and dark mode.",
+                       "38 automated tests across the DLP engine, extractors, proxy add-on and the FastAPI backend."
+                   ],
+    "stack":  [
+                  "Python",
+                  "mitmproxy",
+                  "FastAPI",
+                  "SQLAlchemy",
+                  "pytest"
+              ],
+    "next":  [
+                 "Validate browser web-UI traffic (ChatGPT, Claude, Gemini) against the generic web-UI extractor.",
+                 "Authentication, plus a per-device drill-down and trend charts in the dashboard.",
+                 "Root CA and PAC/GPO deployment tooling, with certificate-pinning checks.",
+                 "Multi-tenant separation and per-client keyword lists."
+             ],
+    "links":  [
+                  {
+                      "label":  "Source on GitHub",
+                      "url":  "https://github.com/alennjit/AI-Security-Agent"
+                  }
+              ],
+    "screenshots":  [
+                        {
+                            "file":  "dashboard-light.png",
+                            "alt":  "AI Security Agent admin dashboard in light mode: summary tiles, breakdown by AI service and data type, and a table of flagged prompts with risk badges.",
+                            "caption":  "The admin dashboard, fed by a real proxy run: nine flagged prompts from four client addresses, with the first event\u0027s rationale expanded."
+                        },
+                        {
+                            "file":  "dashboard-dark.png",
+                            "alt":  "The same dashboard in dark mode.",
+                            "caption":  "Dark mode. Severity is shown by icon and label as well as color."
+                        },
+                        {
+                            "file":  "dlp-engine-output.png",
+                            "alt":  "Terminal output showing a prompt containing a fake AWS key and SSN, scored 10 out of 10, with each finding listed using a masked value.",
+                            "caption":  "Real engine output for a fake prompt (an AWS documentation example key and a sample SSN). Every stored value is masked."
+                        },
+                        {
+                            "file":  "architecture.svg",
+                            "alt":  "Diagram: client devices send traffic to a TLS-inspecting proxy that matches AI domains, extracts prompts and runs DLP classification; redacted events go to a backend API and the admin dashboard.",
+                            "caption":  "Data flow from client to proxy to backend to dashboard.",
+                            "width":  900,
+                            "height":  300
+                        }
+                    ]
 }
