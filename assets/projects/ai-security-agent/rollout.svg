@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img" aria-labelledby="t d">
+  <title id="t">Deployment rollout order</title>
+  <desc id="d">Disclose in the acceptable-use policy, generate a per-client name-constrained CA on the proxy host, trust the CA and apply an unlinked PAC policy to a pilot group, verify with a read-only checker, then widen in rings. Rollback unlinks the policy first, waits for refresh, then removes the CA.</desc>
+  <style>
+    :root { --bg:#fcfcfb; --box:#ffffff; --line:#c9d1dc; --ink:#0e1a2b; --muted:#5b6778; --accent:#0f6f8f; --soft:#e4f2f6; --warn:#b8790f; --warnbg:#fdf0d5; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#121c2d; --box:#17243a; --line:#2b3b57; --ink:#eef2f7; --muted:#9aa8bb; --accent:#4cc3e0; --soft:#11303d; --warn:#fab219; --warnbg:#332708; } }
+    text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: var(--ink); }
+    .n { font-size: 11px; font-weight: 700; fill: var(--accent); letter-spacing: .08em; }
+    .t { font-size: 14px; font-weight: 700; }
+    .s { font-size: 11.5px; fill: var(--muted); }
+    .box { fill: var(--box); stroke: var(--line); stroke-width: 1.5; }
+    .hot { fill: var(--soft); stroke: var(--accent); stroke-width: 2; }
+    .arrow { stroke: var(--accent); stroke-width: 2; fill: none; marker-end: url(#h); }
+    .back { stroke: var(--warn); stroke-width: 2; fill: none; stroke-dasharray: 6 5; marker-end: url(#w); }
+  </style>
+  <defs>
+    <marker id="h" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 Z" fill="#0f6f8f"/></marker>
+    <marker id="w" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 Z" fill="#b8790f"/></marker>
+  </defs>
+  <rect width="900" height="300" fill="var(--bg)" rx="14"/>
+
+  <rect class="box" x="20" y="40" width="152" height="130" rx="12"/>
+  <text class="n" x="34" y="64">1</text>
+  <text class="t" x="34" y="86">Disclose</text>
+  <text class="s" x="34" y="108">Acceptable-use policy</text>
+  <text class="s" x="34" y="124">covers AI monitoring;</text>
+  <text class="s" x="34" y="140">counsel reviews it</text>
+
+  <path class="arrow" d="M172 105 H190"/>
+  <rect class="box" x="192" y="40" width="152" height="130" rx="12"/>
+  <text class="n" x="206" y="64">2</text>
+  <text class="t" x="206" y="86">Proxy host</text>
+  <text class="s" x="206" y="108">Per-client CA, name-</text>
+  <text class="s" x="206" y="124">constrained; key never</text>
+  <text class="s" x="206" y="140">leaves this machine</text>
+
+  <path class="arrow" d="M344 105 H362"/>
+  <rect class="hot" x="364" y="40" width="172" height="130" rx="12"/>
+  <text class="n" x="378" y="64">3</text>
+  <text class="t" x="378" y="86">Pilot group only</text>
+  <text class="s" x="378" y="108">Trust the CA; create the</text>
+  <text class="s" x="378" y="124">PAC policy unlinked, then</text>
+  <text class="s" x="378" y="140">link to one pilot OU</text>
+
+  <path class="arrow" d="M536 105 H554"/>
+  <rect class="box" x="556" y="40" width="152" height="130" rx="12"/>
+  <text class="n" x="570" y="64">4</text>
+  <text class="t" x="570" y="86">Verify</text>
+  <text class="s" x="570" y="108">Read-only checker:</text>
+  <text class="s" x="570" y="124">CA trusted, routing,</text>
+  <text class="s" x="570" y="140">issuer of the cert seen</text>
+
+  <path class="arrow" d="M708 105 H726"/>
+  <rect class="box" x="728" y="40" width="152" height="130" rx="12"/>
+  <text class="n" x="742" y="64">5</text>
+  <text class="t" x="742" y="86">Widen in rings</text>
+  <text class="s" x="742" y="108">Department, then fleet,</text>
+  <text class="s" x="742" y="124">only after a quiet week</text>
+  <text class="s" x="742" y="140">on the dashboard</text>
+
+  <rect x="20" y="200" width="860" height="72" rx="12" fill="var(--warnbg)" stroke="var(--warn)" stroke-width="1.5"/>
+  <text class="t" x="38" y="226" style="fill:var(--warn)">Rollback, in this order</text>
+  <text class="s" x="38" y="248" style="fill:var(--ink)">1. Unlink and delete the PAC policy   →   2. Wait for the policy refresh   →   3. Remove the CA</text>
+  <text class="s" x="38" y="264">So no machine ever trusts nothing while still being routed to the proxy.</text>
+  <path class="back" d="M804 172 V200"/>
+</svg>

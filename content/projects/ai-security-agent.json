@@ -4,20 +4,23 @@
     "status":  "Working prototype",
     "year":  "2026",
     "order":  2,
-    "summary":  "Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports redacted findings to a SIEM-style admin dashboard.",
+    "summary":  "Network-level data-loss prevention for AI usage. A TLS-inspecting proxy spots prompts headed to ChatGPT, Claude, Gemini and other AI services, scans them for secrets, credentials and personal data, and reports redacted findings to a SIEM-style admin dashboard. Includes fleet deployment tooling built around a name-constrained certificate authority.",
     "problem":  "Employees paste source code, API keys and customer data into AI tools every day, and browser-extension monitors miss API calls and non-browser apps entirely. A network control sees all of it, and mirrors the SSL-inspection model organizations already run on their firewalls.",
     "approach":  [
                      "A mitmproxy add-on matches each request by host and path against a registry of known AI services, then uses a per-provider extractor to pull out only the text the user typed — not system prompts, earlier turns or analytics beacons. Events are delivered on a worker thread, so a slow backend can never stall a user\u0027s request.",
                      "A DLP engine scores that text on a 1 to 10 scale. It detects AWS keys, GitHub and Slack tokens, private key blocks, JWTs, SSNs, Luhn-validated card numbers and confidential-marker keywords.",
-                     "The detector is redaction-first: it never stores or returns the raw match, so the monitoring tool cannot become a new store of secrets. The admin dashboard shows only the risk summary, data types and counts. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo."
+                     "The detector is redaction-first: it never stores or returns the raw match, so the monitoring tool cannot become a new store of secrets. The admin dashboard shows only the risk summary, data types and counts. The consent model is disclosure through acceptable-use policy with a silent runtime, and it is documented in the repo.",
+                     "Deployment is where the real risk lives, because inspecting TLS means clients must trust a certificate authority. The tooling limits that risk by design: a per-client CA with critical X.509 Name Constraints that can only sign for the AI-service hostnames, a PAC file generated from the same service registry the proxy uses so only monitored hosts are ever routed to it, and a fail-open fallback so a proxy outage never breaks anyone\u0027s internet."
                  ],
     "highlights":  [
                        "Validated on live traffic, not just unit tests: real requests to the OpenAI, Anthropic and Gemini APIs, plus real browser sessions on Gemini and Perplexity, through a local test proxy. The test CA was never installed system-wide.",
                        "Found and fixed a real gap: the first browser test recorded zero events, because chat UIs use their own request formats — Gemini nests JSON inside JSON inside a form field. Endpoint-aware parsers now catch them.",
                        "Perplexity echoes each prompt into analytics beacons. The registry matches on path, so the beacons are ignored and a prompt is reported exactly once.",
-                       "Redaction by design: findings carry the rule, category and weight — never the secret itself.",
-                       "Admin dashboard with summary tiles, breakdowns by AI service and data type, filters, per-event rationale and live refresh, in light and dark mode.",
-                       "56 automated tests across the DLP engine, extractors, proxy add-on and backend. A small capture tool records request structure — never prompt text — for building new parsers."
+                       "Name-constrained inspection CA: tested end to end through a real proxy. AI-service hosts connect; example.com, www.google.com and mail.google.com are refused by the client, so a leaked CA key cannot impersonate a mail provider or a bank.",
+                       "The CA test caught a subtle problem: mitmproxy copies the real server\u0027s certificate names, and Google\u0027s shared certificates list dozens of unrelated domains, which the constrained CA correctly rejects. Disabling upstream name copying fixed it, and a test now guards that setting.",
+                       "Deployment scripts are safe by default: the CA installer verifies the thumbprint and refuses any certificate that is not name-constrained, contains a private key or has expired; group policy is created unlinked and refuses a domain-wide link; everything has a dry-run mode and a rollback; a read-only checker reports what a machine actually receives.",
+                       "Redaction by design: findings carry the rule, category and weight — never the secret itself. The admin dashboard has tiles, breakdowns, filters, per-event rationale and live refresh in light and dark mode.",
+                       "69 automated tests across the DLP engine, parsers, proxy add-on, backend and deployment tooling, including evaluating the generated PAC file in a JavaScript engine."
                    ],
     "stack":  [
                   "Python",
@@ -27,10 +30,10 @@
                   "pytest"
               ],
     "next":  [
+                 "Pilot the deployment tooling on a real domain. The Group Policy scripts have only been dry-run and parse-checked so far, because no domain was available.",
+                 "Block QUIC/HTTP3 to monitored hosts so browsers cannot bypass the proxy, set up Firefox\u0027s enterprise-roots policy, and test certificate pinning on the AI apps a client actually uses.",
                  "Capture ChatGPT and Claude web traffic from a signed-in session. ChatGPT blocks automated browsers, and claude.ai needs a login, so those parsers are written but unverified.",
-                 "Inspect Microsoft Copilot, which chats over a WebSocket rather than plain requests.",
-                 "Authentication, plus a per-device drill-down and trend charts in the dashboard.",
-                 "Root CA and PAC/GPO deployment tooling, with certificate-pinning checks, then multi-tenant separation."
+                 "Authentication, plus a per-device drill-down and trend charts in the dashboard; Microsoft Copilot (WebSocket) inspection; multi-tenant separation."
              ],
     "links":  [
                   {
@@ -58,6 +61,18 @@
                             "file":  "architecture.svg",
                             "alt":  "Diagram: client devices send traffic to a TLS-inspecting proxy that matches AI domains, extracts prompts and runs DLP classification; redacted events go to a backend API and the admin dashboard.",
                             "caption":  "Data flow from client to proxy to backend to dashboard.",
+                            "width":  900,
+                            "height":  300
+                        },
+                        {
+                            "file":  "name-constraints-check.png",
+                            "alt":  "Terminal output: connections to api.openai.com, api.anthropic.com, gemini.google.com and www.perplexity.ai succeed through the proxy, while example.com, www.google.com and mail.google.com are rejected by the client.",
+                            "caption":  "The name-constrained CA, tested through a real proxy: permitted AI hosts connect; every other site is refused by the client."
+                        },
+                        {
+                            "file":  "rollout.svg",
+                            "alt":  "Five-step rollout: disclose in the acceptable-use policy, set up the proxy host and per-client CA, trust the CA and apply the PAC policy to a pilot group only, verify with a read-only checker, then widen in rings. Rollback unlinks the policy, waits, then removes the CA.",
+                            "caption":  "Rollout order, and the rollback order that keeps every machine consistent.",
                             "width":  900,
                             "height":  300
                         }
