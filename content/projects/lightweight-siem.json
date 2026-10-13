@@ -7,18 +7,28 @@
   "summary": "A subscription service for non-technical people — often parents and grandparents. It scans their email for phishing, scores every suspicious message from 1 to 10 with a plain-language explanation, and alerts a linked family member so they can step in before money or credentials are lost.",
   "problem": "Enterprise SIEMs are built for security teams. The people who actually lose money to phishing are often retirees with no security team at all — and the relative who would help has no visibility until it is too late. This project is a deliberately small detection and alerting pipeline built around one relationship: one protected person, one or more family monitors.",
   "approach": [
-    "A rule-based heuristic engine scores each message for brand impersonation, look-alike and punycode domains, IP-literal links, URL shorteners, abused TLDs, free-webmail senders claiming to be a bank, and urgency or credential-harvesting language. Every score ships with a human-readable rationale, never a bare number.",
+    "A rule-based heuristic engine scores each message for brand impersonation, look-alike and punycode domains, IP-literal links, URL shorteners, abused TLDs on links and senders, free-webmail senders claiming to be a bank, urgency language, gift-card payment requests and fake renewal/refund callback scams. Every score ships with a human-readable rationale and a threat category, never a bare number.",
     "Gmail connects through OAuth 2.0 with the narrowest scope that supports the design. Access and refresh tokens are encrypted at rest, state is protected by a CSRF cookie, and only message headers, sender and links feed the first-pass scoring.",
     "The monitor dashboard is a React and TypeScript app. Everything that came from a phishing email is treated as attacker-controlled: it renders as plain text only, and flagged links are shown inert, never clickable."
   ],
   "highlights": [
     "Privacy-first design: data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.",
+    "Detection tuned against both scams and ordinary mail: gift-card and fake-renewal scams are caught, while retail gift-card ads, real receipts and mailing lists like Google Groups are not flagged.",
+    "Protection history shows emails checked vs. threats caught per day and a breakdown by threat type, built on a scan log that stores no message content — a test pins its columns.",
     "Gmail OAuth flow with Fernet-encrypted tokens, automatic refresh, and manual-trigger ingestion into the same scoring engine.",
-    "40 automated tests, with every external service mocked.",
-    "Dashboard built for a worried family member, not an analyst: plain-language severity labels and light and dark themes.",
-    "Public demo deployed to GitHub Pages by GitHub Actions: no backend, a strict Content Security Policy, and sample alerts whose scores and explanations are real output from the detection engine."
+    "64 automated tests, with every external service mocked.",
+    "Public demo deployed to GitHub Pages by GitHub Actions: no backend, a strict Content Security Policy, and sample data generated from the real detection engine, with a test that fails if the two drift apart."
   ],
-  "stack": ["Python", "FastAPI", "SQLAlchemy", "React", "TypeScript", "Vite", "OAuth 2.0"],
+  "stack": [
+    "Python",
+    "FastAPI",
+    "SQLAlchemy",
+    "React",
+    "TypeScript",
+    "Vite",
+    "OAuth 2.0",
+    "GitHub Actions"
+  ],
   "next": [
     "Verify the Gmail connection against a live inbox and add background polling.",
     "Family linking and consent flow, then alert delivery by email, push and SMS.",
@@ -26,12 +36,35 @@
     "Threat-intelligence lookups and AI-written risk narratives, sent only after a heuristic flag."
   ],
   "links": [
-    { "label": "Live demo", "url": "https://alennjit.github.io/Lightweight-SIEM/" },
-    { "label": "Source on GitHub", "url": "https://github.com/alennjit/Lightweight-SIEM" }
+    {
+      "label": "Live demo",
+      "url": "https://alennjit.github.io/Lightweight-SIEM/"
+    },
+    {
+      "label": "Source on GitHub",
+      "url": "https://github.com/alennjit/Lightweight-SIEM"
+    }
   ],
   "screenshots": [
-    { "file": "dashboard-light.png", "alt": "Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges.", "caption": "The monitor dashboard, as it appears in the live demo: summary tiles, then each flagged message with a severity label, score and plain-language reason." },
-    { "file": "dashboard-dark.png", "alt": "The same dashboard in dark mode.", "caption": "Dark mode uses the same layout with a separately tuned palette." },
-    { "file": "detection-test-tool.png", "alt": "Developer test form that submits a sample email and shows a flagged result with a 10 out of 10 score.", "caption": "A built-in test tool submits a sample email through the same scoring pipeline the real ingestion path uses." }
+    {
+      "file": "dashboard-light.png",
+      "alt": "Lightweight SIEM dashboard in light mode showing summary tiles and a list of flagged emails with severity badges, including bank, delivery, gift-card and fake-renewal scams.",
+      "caption": "Recent alerts in the live demo: each flagged message with a severity label, score and plain-language reason."
+    },
+    {
+      "file": "protection-history.png",
+      "alt": "Protection history tab: summary sentence, tiles for emails checked, threats caught, high-risk and dangerous links, a 30-day bar chart of clean email versus threats caught, and horizontal bars by threat type.",
+      "caption": "Protection history: what was checked and caught over 30 days, and which warning signs appeared most."
+    },
+    {
+      "file": "dashboard-dark.png",
+      "alt": "The alerts view in dark mode.",
+      "caption": "Dark mode uses the same layout with a separately tuned palette."
+    },
+    {
+      "file": "detection-test-tool.png",
+      "alt": "Developer test form that submits a sample email and shows a flagged result with a 10 out of 10 score.",
+      "caption": "A built-in test tool submits a sample email through the same scoring pipeline the real ingestion path uses."
+    }
   ]
 }
