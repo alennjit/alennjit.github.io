@@ -1,7 +1,7 @@
 # Portfolio
 
-Personal portfolio site for Alen Frashnishta. Plain HTML and CSS — no framework,
-no client-side JavaScript, strict Content Security Policy.
+Personal portfolio site for Alen Frashnishta. Plain HTML and CSS with no framework,
+no client-side JavaScript and a strict Content Security Policy.
 
 Live: https://alennjit.github.io
 
@@ -17,7 +17,7 @@ Live: https://alennjit.github.io
    Tip: capture at 2x device scale (retina) so they stay sharp.
 3. Run `python build.py`. It regenerates the home-page cards, `projects/index.html`
    and one case-study page per project. Python standard library only.
-4. Commit and push — GitHub Pages redeploys automatically.
+4. Commit and push. GitHub Pages redeploys automatically.
 
 To refresh a project's screenshots after it changes, replace the image files
 (keep the same file names) and rebuild.

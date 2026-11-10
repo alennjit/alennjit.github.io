@@ -4,20 +4,20 @@
   "status": "Working prototype · live demo",
   "year": "2026",
   "order": 1,
-  "summary": "A subscription service for non-technical people — often parents and grandparents. It scans their email for phishing, scores every suspicious message from 1 to 10 with a plain-language explanation, and alerts a linked family member so they can step in before money or credentials are lost.",
-  "problem": "Enterprise SIEMs are built for security teams. The people who actually lose money to phishing are often retirees with no security team at all — and the relative who would help has no visibility until it is too late. This project is a deliberately small detection and alerting pipeline built around one relationship: one protected person, one or more family monitors.",
+  "summary": "A subscription service for non-technical people, often parents and grandparents. It scans their email for phishing, scores every suspicious message from 1 to 10 with a plain-language explanation, and alerts a linked family member so they can step in before money or credentials are lost.",
+  "problem": "Enterprise SIEMs are built for security teams. The people who actually lose money to phishing are often retirees with no security team at all, and the relative who would help has no visibility until it is too late. This project is a small detection and alerting pipeline built around one relationship: one protected person, one or more family monitors.",
   "approach": [
     "A rule-based heuristic engine scores each message for brand impersonation, look-alike and punycode domains, IP-literal links, URL shorteners, abused TLDs on links and senders, free-webmail senders claiming to be a bank, urgency language, gift-card payment requests and fake renewal/refund callback scams. Every score ships with a human-readable rationale and a threat category, never a bare number.",
     "Gmail connects through OAuth 2.0 with the narrowest scope that supports the design. Access and refresh tokens are encrypted at rest, state is protected by a CSRF cookie, and only message headers, sender and links feed the first-pass scoring.",
     "The monitor dashboard is a React and TypeScript app. Everything that came from a phishing email is treated as attacker-controlled: it renders as plain text only, and flagged links are shown inert, never clickable."
   ],
   "highlights": [
-    "Privacy-first design: data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.",
+    "Privacy comes first in the design, with data minimization, explicit consent from the protected person, and a defined path for what the monitor can and cannot see.",
     "Accounts with consent-based family linking: the protected person issues a single-use invite code, either side can revoke, and every endpoint enforces who may see whose alerts. Sessions use httpOnly cookies holding a token whose hash alone is stored, with login throttling and an Origin-check CSRF defence.",
     "Detection tuned against both scams and ordinary mail: gift-card and fake-renewal scams are caught, while retail gift-card ads, real receipts and mailing lists like Google Groups are not flagged.",
-    "Protection history shows emails checked vs. threats caught per day and a breakdown by threat type, built on a scan log that stores no message content — a test pins its columns.",
+    "Protection history shows emails checked vs. threats caught per day and a breakdown by threat type, built on a scan log that stores no message content. A test pins its columns.",
     "Gmail OAuth flow with Fernet-encrypted tokens, automatic refresh, and manual-trigger ingestion into the same scoring engine.",
-    "106 automated tests, with every external service mocked — 42 of them attack the sign-in, session and family-access rules directly.",
+    "106 automated tests, with every external service mocked. Of those, 42 attack the sign-in, session and family-access rules directly.",
     "Public demo deployed to GitHub Pages by GitHub Actions: no backend, a strict Content Security Policy, and sample data generated from the real detection engine, with a test that fails if the two drift apart."
   ],
   "stack": [
